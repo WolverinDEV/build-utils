@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use std::hash::{Hasher, Hash};
 
 pub struct MesonBuild {
+    callback_promote: Option<Box<dyn Fn(&str) -> Vec<String>>>,
     meson_options: HashMap<String, String>
 }
 
@@ -32,8 +33,11 @@ impl BuildStep for MesonBuild {
         let build_path = build.build_path().to_str().expect("invalid build path");
         let source_path = build.source().local_directory().to_str().expect("invalid source path");
 
+        let mut execute_setup = true;
         /* setup */
-        {
+        while execute_setup {
+            execute_setup = false;
+
             let mut command = Command::new("meson");
             command.arg("setup");
             command.args(&["--prefix", build.install_prefix().to_str().expect("invalid install prefix")]);
@@ -50,7 +54,33 @@ impl BuildStep for MesonBuild {
             command.arg(&build_path);
             command.arg(&source_path);
 
-            execute_build_command(&mut command, "failed to setup build")?;
+            if let Err(error) = execute_build_command(&mut command, "failed to setup build") {
+                if let Some(line) = error.stdout.lines().find(|line| line.find("meson wrap promote ").is_some()) {
+                    let argument = line.split("meson wrap promote ").nth(1).expect("missing promote arguments");
+
+                    if let Some(callback) = &self.callback_promote {
+                        let promote: Vec<String> = callback(argument);
+                        if !promote.is_empty() {
+                            for file in promote.iter() {
+                                println!("Promoting wrap file {}", file);
+                                let mut command = Command::new("meson");
+                                command.current_dir(source_path)
+                                    .arg("wrap")
+                                    .arg("promote")
+                                    .arg(file);
+
+                                execute_build_command(&mut command, format!("failed to execute promote command for {}", file).as_str())?;
+                            }
+
+                            execute_setup = true;
+                            continue;
+                        } else {
+                            /* the user don't want to promote anything */
+                        }
+                    }
+                }
+                return Err(error);
+            }
         }
 
         /* compile */
@@ -127,6 +157,7 @@ impl MesonBuildBuilder {
     fn new() -> Self {
         MesonBuildBuilder{
             inner: MesonBuild{
+                callback_promote: None,
                 meson_options: HashMap::new()
             }
         }
@@ -140,6 +171,13 @@ impl MesonBuildBuilder {
         self
     }
 
+    pub fn promote_callback<F: 'static>(mut self, callback: F) -> Self
+        where F: Fn(&str) -> Vec<String>
+    {
+        self.inner.callback_promote = Some(Box::new(callback));
+        self
+    }
+
     pub fn build(self) -> MesonBuild {
         self.inner
     }
@@ -150,12 +188,13 @@ mod test {
     use crate::build::{BuildBuilder, MesonBuild};
     use crate::source::BuildSourceGit;
     use std::env;
+    use crate::Build;
 
     #[test]
-    fn test_build_usrsctp() {
+    fn test_build_srtp() {
         let base_url = std::env::current_dir().expect("missing current dir").join("__test_meson");
 
-        env::set_var("rbuild_meson-test_library_type", "static");
+        env::set_var("rbuild_eson-test-srtp_library_type", "static");
 
         let source = BuildSourceGit::builder("https://github.com/cisco/libsrtp.git".to_owned())
             .checkout_folder(Some(base_url.clone()))
@@ -168,7 +207,7 @@ mod test {
 
         /* FIXME: Use some kind of dummy system here! */
         let build = BuildBuilder::new()
-            .name("meson-test")
+            .name("meson-test-srtp")
             .source(Box::new(source))
             .install_prefix(base_url.join("install_root"))
             .build_path(base_url.clone())
@@ -177,6 +216,45 @@ mod test {
             .build();
 
         let mut build = build.expect("failed to create build");
+        match build.execute() {
+            Err(error) => {
+                println!("{}", error.pretty_format());
+                panic!();
+            },
+            Ok(result) => result.emit_cargo()
+        }
+    }
+
+    #[test]
+    fn test_build_libnice() {
+        let base_url = std::env::current_dir().expect("missing current dir").join("__test_meson");
+
+        let source = BuildSourceGit::builder("https://github.com/WolverinDEV/libnice.git".to_owned())
+            .checkout_folder(Some(base_url.clone()))
+            .build();
+
+        let meson = MesonBuild::builder()
+            .promote_callback(|source| {
+                println!("Callback promote for {:?}", source);
+                vec![
+                    "subprojects/glib-2.64.2/subprojects/zlib.wrap".to_owned(),
+                    "subprojects/glib-2.64.2/subprojects/libffi.wrap".to_owned(),
+                    "subprojects/glib-2.64.2/subprojects/proxy-libintl.wrap".to_owned()
+                ]
+            })
+            .meson_option("gstreamer", "disabled")
+            .meson_option("tests", "disabled")
+            .build();
+
+        let mut build_builder = Build::builder()
+            .name("libnice")
+            .source(Box::new(source))
+            .add_step(Box::new(meson))
+            .build_path(base_url.clone())
+            .install_prefix(base_url.join("install_root_nice"))
+            .remove_build_dir(false);
+
+        let mut build = build_builder.build().expect("failed to create build");
         match build.execute() {
             Err(error) => {
                 println!("{}", error.pretty_format());
