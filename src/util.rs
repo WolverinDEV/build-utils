@@ -123,6 +123,9 @@ impl Debug for TemporaryPath {
 pub fn create_temporary_path(folder_name: &str, base_dir: Option<&PathBuf>) -> std::io::Result<TemporaryPath> {
     let path = if let Some(base_dir) = base_dir {
         base_dir.join(folder_name)
+    } else if let Ok(path) = env::var("OUT_DIR") {
+        /* Seems like a cargo build. Use that directory as temp so we don't junk the system temp directory */
+        PathBuf::from(path).join(folder_name)
     } else {
         env::temp_dir().join(folder_name)
     };
