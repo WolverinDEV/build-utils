@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Remote Host (548de2b4-d7a6-4ef0-adee-25968d0c6276)">
+        <serverdata>
+          <mappings>
+            <mapping local="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="WSL (50760d01-3fa0-4412-ba6c-8314c7c6237c)">
+        <serverdata>
+          <mappings>
+            <mapping local="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="WSL (a03e0d93-8ab9-4b93-845c-3872b0c390c7)">
+        <serverdata>
+          <mappings>
+            <mapping local="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

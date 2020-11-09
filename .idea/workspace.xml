@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="de9ed994-4535-4c01-92a0-8bf42bd30bd1" name="Default Changelist" comment="">
+      <change afterPath="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/src/build/meson.rs" afterDir="false" />
+      <change afterPath="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/src/build/mod.rs" afterDir="false" />
+      <change afterPath="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/src/resolve/mod.rs" afterDir="false" />
+      <change afterPath="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/src/source/file.rs" afterDir="false" />
+      <change afterPath="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/src/source/mod.rs" afterDir="false" />
+      <change afterPath="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils/src/util.rs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$APPLICATION_HOME_DIR$/jbr/bin/D/git/rust/build-utils" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="qtorrmu6" />
+  </component>
+  <component name="ProjectId" id="1k0ZES4Yr8GTYnWJ22DrB4Qc8eo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Program Files\JetBrains\CLion 2020.2\jbr\bin\D\git\rust\build-utils\src\build" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test --package build-utils --lib tests" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="run" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <envs />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="D:/Users/WolverinDEV/.cargo/bin" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="de9ed994-4535-4c01-92a0-8bf42bd30bd1" name="Default Changelist" comment="" />
+      <created>1604839357646</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604839357646</updated>
+      <workItem from="1604839359433" duration="1605000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1678" y="705" key="#com.intellij.ide.util.MemberChooser" timestamp="1604839980213">
+      <screen x="0" y="0" width="3840" height="2120" />
+    </state>
+    <state x="1678" y="705" key="#com.intellij.ide.util.MemberChooser/-2.-2160.3840.2120/-3842.-2134.3840.2120/0.0.3840.2120/-3840.26.3840.2120@0.0.3840.2120" timestamp="1604839980213" />
+  </component>
+</project>
