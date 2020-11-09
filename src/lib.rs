@@ -12,3 +12,10 @@ pub use build::{
 
     BuildResult
 };
+
+pub use util::{
+    execute_build_command,
+    create_temporary_path,
+
+    TemporaryPath
+};

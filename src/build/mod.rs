@@ -226,6 +226,8 @@ pub trait BuildStep {
 
     /* some generic function */
     fn execute(&mut self, build: &Build, result: &mut BuildResult) -> Result<(), BuildStepError>;
+
+    /* TODO: Add method to check whatever this step needs to be reapplied (Keep in mind to proper set the BuildResult) */
 }
 
 pub struct Build {
