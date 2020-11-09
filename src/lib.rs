@@ -1,6 +1,14 @@
 pub mod source;
 pub mod build;
-pub mod resolve;
 mod util;
 
-pub use build::BuildStep;
+pub use build::{
+    BuildStep,
+    Build,
+
+    BuildLibrary,
+    BuildError,
+    BuildCreateError,
+
+    BuildResult
+};
