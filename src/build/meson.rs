@@ -112,7 +112,10 @@ impl BuildStep for MesonBuild {
                 let key = elements.next().map(|e| e.to_owned());
                 let value = elements.next().map(|e| e.to_owned());
                 if elements.next().is_some() {
-                    return Err(BuildStepError::new(format!("Meson line \"{}\" contains more than one \" to \" parts.", full_line).to_owned(), stdout, stderr));
+                    //return Err(BuildStepError::new(format!("Meson line \"{}\" contains more than one \" to \" parts.", full_line).to_owned(), stdout, stderr));
+
+                    eprintln!("Meson line \"{}\" contains more than one \" to \" parts.", full_line);
+                    continue;
                 }
                 if key.is_none() || value.is_none() {
                     return Err(BuildStepError::new(format!("Meson line \"{}\" misses the key or value.", full_line).to_owned(), stdout, stderr));
