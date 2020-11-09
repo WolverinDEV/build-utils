@@ -3,7 +3,8 @@ name = "build-utils"
 version = "0.1.0"
 authors = ["WolverinDEV <git@did.science>"]
 edition = "2018"
-
+description = "This crate provides a build mechanism for building native libraries in order to use them as react dependencies."
+license = "Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
