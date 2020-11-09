@@ -1,5 +1,7 @@
-use crate::source::BuildSource;
+use crate::source::{BuildSource};
 use std::path::PathBuf;
+use crate::build::BuildStepError;
+use std::hash::{Hasher, Hash};
 
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq, Copy, Clone)]
 pub enum BuildSourceDirectoryError {
@@ -31,7 +33,17 @@ impl BuildSource for BuildSourceDirectory {
         "directory"
     }
 
+    fn hash(&self, target: &mut Box<dyn Hasher>) {
+        self.path.hash(target);
+    }
+
+    fn setup(&mut self) -> Result<(), BuildStepError> {
+        Ok(())
+    }
+
     fn local_directory(&self) -> &PathBuf {
         &self.path
     }
+
+    fn cleanup(&mut self) { }
 }

@@ -3,4 +3,4 @@ pub mod build;
 pub mod resolve;
 mod util;
 
-pub use build::Build;
+pub use build::BuildStep;
