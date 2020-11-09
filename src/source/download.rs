@@ -29,7 +29,8 @@ fn check_git() -> GitBinaryStatus {
                 if version.contains(" 2.") {
                     GitBinaryStatus::Ok(version)
                 } else {
-                    GitBinaryStatus::Outdated(version)
+                    GitBinaryStatus::Ok(version)
+                    //GitBinaryStatus::Outdated(version)
                 }
             } else {
                 GitBinaryStatus::Unknown(format!("truncated git version output"))
