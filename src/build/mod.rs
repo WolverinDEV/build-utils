@@ -238,7 +238,7 @@ pub struct Build {
     library_type: LibraryType,
 
     build_path: TemporaryPath,
-    install_prefix: Option<PathBuf>,
+    install_prefix: PathBuf,
 }
 
 impl Build {
@@ -258,8 +258,7 @@ impl Build {
     }
 
     /// Get the target install prefix where the library should be installed into.
-    /// This might be unset.
-    pub fn install_prefix(&self) -> &Option<PathBuf> {
+    pub fn install_prefix(&self) -> &PathBuf {
         &self.install_prefix
     }
 
@@ -373,9 +372,18 @@ impl BuildBuilder {
         };
 
         let hash_str = base64::encode(build_hash.to_be_bytes()).replace("/", "_");
-        let build_path = match create_temporary_path(format!("build_{}_{}", &name, hash_str).as_ref(), self.build_path) {
+        let build_path = match create_temporary_path(format!("build_{}_{}", &name, hash_str).as_ref(), self.build_path.as_ref()) {
             Ok(path) => path,
             Err(err) => return Err(BuildCreateError::FailedToCreateBuildDirectory(err))
+        };
+
+        let install_prefix = if let Some(prefix) = install_prefix {
+            prefix
+        } else {
+            match create_temporary_path(format!("install_{}_{}", &name, hash_str).as_ref(), self.build_path.as_ref()) {
+                Ok(path) => path.release().path().clone(),
+                Err(err) => return Err(BuildCreateError::FailedToCreateBuildDirectory(err))
+            }
         };
 
         if !self.remove_build_dir {

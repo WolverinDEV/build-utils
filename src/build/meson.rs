@@ -36,10 +36,7 @@ impl BuildStep for MesonBuild {
         {
             let mut command = Command::new("meson");
             command.arg("setup");
-
-            if let Some(prefix) = build.install_prefix() {
-                command.args(&["--prefix", prefix.to_str().expect("invalid install prefix")]);
-            }
+            command.args(&["--prefix", build.install_prefix().to_str().expect("invalid install prefix")]);
 
             match build.library_type {
                 LibraryType::Shared => command.arg("-Ddefault_library=shared"),
@@ -153,7 +150,6 @@ mod test {
     use crate::build::{BuildBuilder, MesonBuild};
     use crate::source::BuildSourceGit;
     use std::env;
-    use crate::util::create_temporary_path;
 
     #[test]
     fn test_build_usrsctp() {

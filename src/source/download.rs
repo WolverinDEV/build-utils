@@ -97,7 +97,7 @@ impl BuildSource for BuildSourceGit {
             return Err(BuildStepError::new_simple(format!("git error: {:?}", GIT_STATUS.deref())));
         }
 
-        let target_folder = match create_temporary_path(&self.temporary_directory_name(), self.checkout_folder.clone()) {
+        let target_folder = match create_temporary_path(&self.temporary_directory_name(), self.checkout_folder.as_ref()) {
             Ok(folder) => {
                 folder.release(); /* FIXME! */
                 self.local_folder = Some(folder.clone());

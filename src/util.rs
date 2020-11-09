@@ -57,8 +57,14 @@ pub fn build_library_type(build_name: &str) -> Result<LibraryType, BuildLibraryT
 }
 
 pub fn install_prefix(build_name: &str) -> Option<PathBuf> {
-    resolve_env_var!(build_name, "install_prefix")
-        .map(PathBuf::from)
+    if let Some(path) = resolve_env_var!(build_name, "install_prefix")  {
+        Some(PathBuf::from(path))
+    } else if let Ok(path) = env::var("OUT_DIR") {
+        /* we're doing cargo right now */
+        Some(PathBuf::from(path))
+    } else {
+        None
+    }
 }
 
 struct TemporaryPathInner {
@@ -114,8 +120,13 @@ impl Debug for TemporaryPath {
     }
 }
 
-pub fn create_temporary_path(folder_name: &str, base_dir: Option<PathBuf>) -> std::io::Result<TemporaryPath> {
-    let path = base_dir.unwrap_or_else(env::temp_dir).join(folder_name);
+pub fn create_temporary_path(folder_name: &str, base_dir: Option<&PathBuf>) -> std::io::Result<TemporaryPath> {
+    let path = if let Some(base_dir) = base_dir {
+        base_dir.join(folder_name)
+    } else {
+        env::temp_dir().join(folder_name)
+    };
+
     std::fs::create_dir_all(&path).map(|_| TemporaryPath{ inner: Arc::new(TemporaryPathInner{ path, released: false })})
 }
 
