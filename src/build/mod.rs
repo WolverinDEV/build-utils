@@ -93,6 +93,18 @@ impl BuildError {
 
         result
     }
+
+    pub fn error(&self) -> &BuildStepError {
+        &self.error
+    }
+}
+
+impl Deref for BuildError {
+    type Target = BuildStepError;
+
+    fn deref(&self) -> &Self::Target {
+        &self.error
+    }
 }
 
 #[derive(Debug)]
