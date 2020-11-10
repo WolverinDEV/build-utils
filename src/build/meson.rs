@@ -85,11 +85,10 @@ impl BuildStep for MesonBuild {
 
         /* compile */
         {
-            let mut command = Command::new("meson");
-            command.arg("compile");
+            let mut command = Command::new("ninja");
             command.arg("-C");
             command.arg(&build_path);
-            execute_build_command(&mut command, "failed to execute build")?;
+            execute_build_command(&mut command, "failed to build")?;
         }
 
         /* install */
