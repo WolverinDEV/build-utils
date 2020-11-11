@@ -135,11 +135,12 @@ impl BuildStep for MesonBuild {
                     }
 
                     //println!("Installed {:?} ({}) to {:?}", source, extension, target);
-                    let file_name = source.file_name().expect("missing source file name").to_string_lossy().into_owned();
+                    let file_name = source.file_name().expect("missing source file name").to_string_lossy().to_string();;
+                    let libname = file_name.split(".").nth(0).expect("missing first element").to_owned();
                     let info = match extension.as_ref() {
                         "a" => {
-                            if file_name.starts_with("lib") {
-                                Some((file_name[3..].to_owned(), LibraryType::Static))
+                            if libname.starts_with("lib") {
+                                Some((libname[3..].to_owned(), LibraryType::Static))
                             } else {
                                 /* .a static libraries should all have the pattern lib<name>.a */
                                 None
@@ -147,12 +148,12 @@ impl BuildStep for MesonBuild {
                         },
                         "lib" => {
                             /* <name>.lib */
-                            Some((file_name.clone(), LibraryType::Static))
+                            Some((libname.clone(), LibraryType::Static))
                         },
                         /* FIXME: Whats with libnice.so.10 as an example? */
                         "so" => {
-                            if file_name.starts_with("lib") {
-                                Some((file_name[3..].to_owned(), LibraryType::Static))
+                            if libname.starts_with("lib") {
+                                Some((libname[3..].to_owned(), LibraryType::Static))
                             } else {
                                 /* .so static libraries should all have the pattern lib<name>.so */
                                 None
@@ -160,8 +161,9 @@ impl BuildStep for MesonBuild {
                         },
                         "dll" => {
                             /* <name>.dll */
-                            Some((file_name.clone(), LibraryType::Shared))
-                        }
+                            Some((libname.clone(), LibraryType::Shared))
+                        },
+                        _ => None
                     };
 
                     if let Some((libname, kind)) = info {
@@ -176,7 +178,7 @@ impl BuildStep for MesonBuild {
             }).collect::<Vec<_>>();
 
             for (file_name, library, kind) in libraries.iter() {
-                if libraries.iter().find(|(fname, lname, _)| lname == library && fname != file_name).is_some() {
+                if libraries.iter().find(|(fname, lname, _)| *lname == *library && *fname != *file_name).is_some() {
                     /* we've a static and a shared instance of that library */
                     result.add_library(file_name.clone(), Some(kind.clone()));
                 } else {
