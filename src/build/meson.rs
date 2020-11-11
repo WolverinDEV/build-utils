@@ -178,6 +178,7 @@ impl BuildStep for MesonBuild {
             }).collect::<Vec<_>>();
 
             for (file_name, library, kind) in libraries.iter() {
+                /*
                 if libraries.iter().find(|(fname, lname, _)| *lname == *library && *fname != *file_name).is_some() {
                     /* we've a static and a shared instance of that library */
                     result.add_library(file_name.clone(), Some(kind.clone()));
@@ -185,6 +186,8 @@ impl BuildStep for MesonBuild {
                     /* Don't specify the kind so rust will link the library in static and shared builds */
                     result.add_library(file_name.clone(), None);
                 }
+                */
+                result.add_library(file_name.clone(), None);
             }
         }
 
