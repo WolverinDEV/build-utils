@@ -221,7 +221,7 @@ impl BuildResult {
         });
 
         self.libraries.iter().for_each(|path| {
-            println!("cargo:rustc-link-search={}", path.to_string());
+            println!("cargo:rustc-link-lib={}", path.to_string());
         });
 
         self.custom_compiler_emits.iter().for_each(|emit| {
