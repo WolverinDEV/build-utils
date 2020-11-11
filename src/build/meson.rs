@@ -42,7 +42,7 @@ impl BuildStep for MesonBuild {
             command.arg("setup");
             command.args(&["--prefix", build.install_prefix().to_str().expect("invalid install prefix")]);
 
-            match build.library_type {
+            match build.library_type() {
                 LibraryType::Shared => command.arg("-Ddefault_library=shared"),
                 LibraryType::Static => command.arg("-Ddefault_library=static"),
             };
@@ -125,26 +125,65 @@ impl BuildStep for MesonBuild {
 
             /* Gather installed libraries and emit them to the build result */
             //println!("Stdout:\n{}\nStderr:\n{}", stdout.replace("\\", "/"), stderr);
-            installed_elements.iter().for_each(|(key, value)| {
+            let libraries = installed_elements.iter().filter_map(|(key, value)| {
                 let source = PathBuf::from(key);
                 if let Some(extension) = source.extension().map(|e| e.to_string_lossy().into_owned()) {
                     let target = PathBuf::from(value);
                     if !target.is_dir() {
                         eprintln!("meson printed install for file \"{:?}\" to \"{:?}\", but target isn't a directory.", source, target);
-                        return;
+                        return None;
                     }
 
                     //println!("Installed {:?} ({}) to {:?}", source, extension, target);
-                    if matches!(extension.as_ref(), "a" | "lib") {
-                        result.add_library(source.file_name().expect("missing source file name").to_string_lossy().into_owned(), Some(LibraryType::Static));
-                    } else if matches!(extension.as_ref(), "so" | "dll") {
-                        result.add_library(source.file_name().expect("missing source file name").to_string_lossy().into_owned(), Some(LibraryType::Shared));
+                    let file_name = source.file_name().expect("missing source file name").to_string_lossy().into_owned();
+                    let info = match extension.as_ref() {
+                        "a" => {
+                            if file_name.starts_with("lib") {
+                                Some((file_name[3..].to_owned(), LibraryType::Static))
+                            } else {
+                                /* .a static libraries should all have the pattern lib<name>.a */
+                                None
+                            }
+                        },
+                        "lib" => {
+                            /* <name>.lib */
+                            Some((file_name.clone(), LibraryType::Static))
+                        },
+                        /* FIXME: Whats with libnice.so.10 as an example? */
+                        "so" => {
+                            if file_name.starts_with("lib") {
+                                Some((file_name[3..].to_owned(), LibraryType::Static))
+                            } else {
+                                /* .so static libraries should all have the pattern lib<name>.so */
+                                None
+                            }
+                        },
+                        "dll" => {
+                            /* <name>.dll */
+                            Some((file_name.clone(), LibraryType::Shared))
+                        }
+                    };
+
+                    if let Some((libname, kind)) = info {
+                        result.add_library_path(target, Some(LinkSearchKind::Native));
+                        Some((file_name, libname, kind))
                     } else {
-                        return;
+                        None
                     }
-                    result.add_library_path(target, Some(LinkSearchKind::Native));
+                } else {
+                    None
                 }
-            });
+            }).collect::<Vec<_>>();
+
+            for (file_name, library, kind) in libraries.iter() {
+                if libraries.iter().find(|(fname, lname, _)| lname == library && fname != file_name).is_some() {
+                    /* we've a static and a shared instance of that library */
+                    result.add_library(file_name.clone(), Some(kind.clone()));
+                } else {
+                    /* Don't specify the kind so rust will link the library in static and shared builds */
+                    result.add_library(file_name.clone(), None);
+                }
+            }
         }
 
         Ok(())
