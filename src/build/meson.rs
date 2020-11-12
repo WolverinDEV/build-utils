@@ -161,7 +161,9 @@ impl BuildStep for MesonBuild {
                         },
                         "dll" => {
                             /* <name>.dll */
-                            Some((libname.clone(), LibraryType::Shared))
+                            // We can't link dll files?
+                            //Some((libname.clone(), LibraryType::Shared))
+                            None
                         },
                         _ => None
                     };
@@ -187,7 +189,7 @@ impl BuildStep for MesonBuild {
                     result.add_library(file_name.clone(), None);
                 }
                 */
-                result.add_library(file_name.clone(), None);
+                result.add_library(library.clone(), None);
             }
         }
 
