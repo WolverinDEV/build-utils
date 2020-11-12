@@ -135,8 +135,8 @@ impl BuildStep for MesonBuild {
                     }
 
                     //println!("Installed {:?} ({}) to {:?}", source, extension, target);
-                    let file_name = source.file_name().expect("missing source file name").to_string_lossy().to_string();;
-                    let libname = file_name.split(".").nth(0).expect("missing first element").to_owned();
+                    let file_name = source.file_name().expect("missing source file name").to_string_lossy().to_string();
+                    let libname = source.file_stem().expect("missing file stem").to_string_lossy().to_string();
                     let info = match extension.as_ref() {
                         "a" => {
                             if libname.starts_with("lib") {
