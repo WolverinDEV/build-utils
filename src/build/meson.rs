@@ -147,12 +147,8 @@ impl BuildStep for MesonBuild {
                             }
                         },
                         "lib" => {
-                            if build.library_type == LibraryType::Shared {
-                                None
-                            } else {
-                                /* <name>.lib */
-                                Some((libname.clone(), LibraryType::Static))
-                            }
+                            /* <name>.lib */
+                            Some((libname.clone(), LibraryType::Static))
                         },
                         /* FIXME: Whats with libnice.so.10 as an example? */
                         "so" => {
