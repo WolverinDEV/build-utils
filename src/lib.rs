@@ -19,3 +19,5 @@ pub use util::{
 
     TemporaryPath
 };
+
+pub use resolve_env_var as rbuild_env_var;
