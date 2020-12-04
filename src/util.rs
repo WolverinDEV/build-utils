@@ -19,7 +19,7 @@ fn resolve_environment_variable_(build_name: &str, key_name: &str, key_general: 
 }
 */
 
-macro_rules! resolve_env_var {
+pub macro_rules! resolve_env_var {
     ($build_name:ident, $key:expr) => {{
         let full_name = format!("rbuild_{}_{}", $build_name, $key);
         let fallback_name = format!("rbuild_{}", $key);
